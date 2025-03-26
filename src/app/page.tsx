@@ -70,28 +70,7 @@ export default function Home() {
   }
   const startListening = () => SpeechRecognition.startListening({ continuous: true });
 
-  // function onChange(sourceId:any, sourceIndex:any, targetIndex:any, targetId:any) {
-  //   console.log(targetId, sourceId);
-  //   if (targetId) {
-  //     const result = move(
-  //       items[sourceId],
-  //       items[targetId],
-  //       sourceIndex,
-  //       targetIndex
-  //     );
-  //     return setItems({
-  //       ...items,
-  //       [sourceId]: result[0],
-  //       [targetId]: result[1]
-  //     });
-  //   }
 
-  //   const result = swap(items[sourceId], sourceIndex, targetIndex);
-  //   return setItems({
-  //     ...items,
-  //     [sourceId]: result
-  //   });
-  // }
   const clear = ()=> {
     resetTranscript();
   }
