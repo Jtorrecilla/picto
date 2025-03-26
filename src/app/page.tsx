@@ -128,16 +128,23 @@ export default function Home() {
            return (
             <div key={i}>
            <div className="grid-item">
-            <div  className="grid-item-content"> 
-
+            <div  className="grid-item-content" style={{
+              display:'flex',
+              flexDirection:'column'
+            }}> 
+            <div>
+              <div>{i}</div>
             <div onClick={()=>{
               const itemsClone = Array.from(items);
               itemsClone.splice(i,1);
               setItems(itemsClone)
               
-            }}>x</div><img src={src} style={{
+            }}>x</div>
+              </div>
+              <div>
+            <img src={src} style={{
             width:200
-           }}></img></div></div></div>) 
+           }}></img></div></div></div></div>) 
         })}
           {/* </GridDropZone> */}
       </div>
