@@ -69,10 +69,8 @@ export default function Home() {
     return <span>Browser doesn't support speech recognition.</span>;
   }
   const startListening = () => SpeechRecognition.startListening({ continuous: true });
-  function handleItemClick({ event, props, triggerEvent, data }){
-    console.log(event, props, triggerEvent, data );
-  }
-  function onChange(sourceId, sourceIndex, targetIndex, targetId) {
+
+  function onChange(sourceId:any, sourceIndex:any, targetIndex:any, targetId:any) {
     console.log(targetId, sourceId);
     if (targetId) {
       const result = move(
@@ -170,23 +168,7 @@ export default function Home() {
       </GridContextProvider>
 
     </div>
-    <Menu id={MENU_ID}>
-        <Item onClick={handleItemClick}>
-          Borrar
-        </Item>
-        <Item onClick={handleItemClick}>
-          Item 2
-        </Item>
-        <Separator />
-        <Item disabled>Disabled</Item>
-        <Separator />
-        <Submenu label="Reemplazar">
-          <Item onClick={handleItemClick}>
-            Sub Item 1
-          </Item>
-          <Item onClick={handleItemClick}>Sub Item 2</Item>
-        </Submenu>
-      </Menu>
+
     </div>
 
     </div>
