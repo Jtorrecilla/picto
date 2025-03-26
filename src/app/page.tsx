@@ -92,6 +92,9 @@ export default function Home() {
   //     [sourceId]: result
   //   });
   // }
+  const clear = ()=> {
+    resetTranscript();
+  }
   return (
     <div>
       <header className="absolute inset-x-0 top-0 z-50">
@@ -104,12 +107,6 @@ export default function Home() {
                 src="logo.png"
                 style={{width:200}}
               />
-            </a>
-          </div>
-
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm/6 font-semibold text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
         </nav>
@@ -134,7 +131,7 @@ export default function Home() {
       }}  />
       <TrashIcon style={{
         width:100
-      }}/>
+      }} onClick={clear}/>
     </div>
     <br/>
     <div style={{display:'flex'}}>
