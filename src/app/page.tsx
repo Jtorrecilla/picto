@@ -2,13 +2,13 @@
 import { MagnifyingGlassCircleIcon, PlayCircleIcon, StopCircleIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useEffect, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
-import {
-  GridContextProvider,
-  GridDropZone,
-  GridItem,
-  swap,
-  move
-} from "react-grid-dnd";
+// import {
+//   GridContextProvider,
+//   GridDropZone,
+//   GridItem,
+//   swap,
+//   move
+// } from "react-grid-dnd";
 import {
   Menu,
   Item,
@@ -70,28 +70,28 @@ export default function Home() {
   }
   const startListening = () => SpeechRecognition.startListening({ continuous: true });
 
-  function onChange(sourceId:any, sourceIndex:any, targetIndex:any, targetId:any) {
-    console.log(targetId, sourceId);
-    if (targetId) {
-      const result = move(
-        items[sourceId],
-        items[targetId],
-        sourceIndex,
-        targetIndex
-      );
-      return setItems({
-        ...items,
-        [sourceId]: result[0],
-        [targetId]: result[1]
-      });
-    }
+  // function onChange(sourceId:any, sourceIndex:any, targetIndex:any, targetId:any) {
+  //   console.log(targetId, sourceId);
+  //   if (targetId) {
+  //     const result = move(
+  //       items[sourceId],
+  //       items[targetId],
+  //       sourceIndex,
+  //       targetIndex
+  //     );
+  //     return setItems({
+  //       ...items,
+  //       [sourceId]: result[0],
+  //       [targetId]: result[1]
+  //     });
+  //   }
 
-    const result = swap(items[sourceId], sourceIndex, targetIndex);
-    return setItems({
-      ...items,
-      [sourceId]: result
-    });
-  }
+  //   const result = swap(items[sourceId], sourceIndex, targetIndex);
+  //   return setItems({
+  //     ...items,
+  //     [sourceId]: result
+  //   });
+  // }
   return (
     <div>
       <header className="absolute inset-x-0 top-0 z-50">
@@ -138,19 +138,19 @@ export default function Home() {
     </div>
     <br/>
     <div style={{display:'flex'}}>
-    <GridContextProvider onChange={onChange}>
+    {/* <GridContextProvider onChange={onChange}> */}
     <div className="container">
-    <GridDropZone
+    {/* <GridDropZone
           className="dropzone left"
           id="left"
           boxesPerRow={3}
           rowHeight={150}
-        >
+        > */}
     {items.map((item, i) => {     
            // Return the element. Also pass key   
           const src = 'img/' + item.img + '.png';
            return (
-            <GridItem key={i}>
+            <div key={i}>
            <div className="grid-item">
             <div  className="grid-item-content"> 
 
@@ -161,11 +161,11 @@ export default function Home() {
               
             }}>x</div><img src={src} style={{
             width:200
-           }}></img></div></div></GridItem>) 
+           }}></img></div></div></div>) 
         })}
-          </GridDropZone>
+          {/* </GridDropZone> */}
       </div>
-      </GridContextProvider>
+      {/* </GridContextProvider> */}
 
     </div>
 
