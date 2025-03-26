@@ -131,11 +131,13 @@ export default function Home() {
             <div  className="grid-item-content" style={{
               display:'flex',
               flexDirection:'column',
-              justifyContent:"space-between",
-              padding:5,
-              width:'100%'
+            
             }}> 
-            <div>
+            <div style={{
+                justifyContent:"space-between",
+                padding:5,
+                width:'100%'
+            }}>
               <div>{i}</div>
             <div onClick={()=>{
               const itemsClone = Array.from(items);
