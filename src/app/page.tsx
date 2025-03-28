@@ -1,5 +1,5 @@
 'use client'
-import { MagnifyingGlassCircleIcon, PlayCircleIcon, StopCircleIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassCircleIcon, PlayCircleIcon, StopCircleIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 // import {
@@ -106,14 +106,17 @@ export default function Home() {
 
   const clear = ()=> {
     resetTranscript();
+    setItems([]);
+  }
+  const close = ()=> {
+    setItems([]);
   }
   return (
     <div>
       <header className="absolute inset-x-0 top-0 z-50">
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
-          <div className="flex lg:flex-1">
+          <div className="logo-container">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
               <img
                 alt=""
                 src="logo2.png"
@@ -126,8 +129,8 @@ export default function Home() {
       </header>
       <div  style={{margin:'0 auto', width:1000 }}>
 
-      <p>Microphone: {listening ? 'on' : 'off'}</p>
       <div className='textarea-container'>
+      <p>Escuchando: {listening ? 'on' : 'off'}</p>
       <textarea 
       value={transcript} // ...force the input's value to match the state variable...
     />
@@ -145,8 +148,11 @@ export default function Home() {
     <DndContext>
      <SortableContext items={items}>
     {items.length == 0 ? <div/> : (
+<div className='main-picto-container'>
+  
+  <div className="grid-item"><XMarkIcon className='action-button' onClick={close}/></div>
+
     <div className="picto-container" ref={setNodeRef}>
-    
     {items.map((item, i) => {     
           return (<GridItem item={item} i={i} f={()=>{
             const itemsClone = Array.from(items);
@@ -156,8 +162,8 @@ export default function Home() {
           }}/>) 
         })}
       </div>
+      </div>
     )}
-
       </SortableContext> 
     </DndContext>
 
