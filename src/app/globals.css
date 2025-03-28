@@ -91,11 +91,14 @@ body {
     position: absolute;
     width: 100vw;
     z-index: 1000;
-    background-color: red;
+    background-color: lightblue;
     top:0;
     
   }
   .logo-container{    margin: 0 auto;}
+  .grid-item {
+    flex:50%;
+  }
 }
 @media only screen and (min-width: 600px) {
   body {

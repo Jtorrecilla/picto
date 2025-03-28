@@ -29,8 +29,8 @@ function GridItem({item,i,f}:{item:{id: number; img: string; tags: string[]},i:N
   });
   const src = 'img/' + item.img + '.png';
   return (
-   <div {...attributes}>
-  <div className="grid-item">
+   <div className="grid-item" {...attributes}>
+  <div >
    <div  className="grid-item-content" style={{
      display:'flex',
      flexDirection:'column',
