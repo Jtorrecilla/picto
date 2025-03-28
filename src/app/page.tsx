@@ -143,8 +143,9 @@ export default function Home() {
     <div style={{display:'flex'}}>
     {/* <GridContextProvider onChange={onChange}> */}
     <DndContext>
-    <SortableContext items={items}>
-    <div className="container" ref={setNodeRef}>
+     <SortableContext items={items}>
+    {items.length == 0 ? <div/> : (
+    <div className="picto-container" ref={setNodeRef}>
     
     {items.map((item, i) => {     
           return (<GridItem item={item} i={i} f={()=>{
@@ -155,7 +156,9 @@ export default function Home() {
           }}/>) 
         })}
       </div>
-      </SortableContext>
+    )}
+
+      </SortableContext> 
     </DndContext>
 
 
