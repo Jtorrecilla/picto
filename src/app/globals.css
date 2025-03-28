@@ -99,6 +99,10 @@ body {
   .grid-item {
     flex:50%;
   }
+  .popup-toolbar {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 @media only screen and (min-width: 600px) {
   body {

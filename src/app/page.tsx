@@ -1,5 +1,5 @@
 'use client'
-import { MagnifyingGlassCircleIcon, PlayCircleIcon, StopCircleIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassCircleIcon, PlayCircleIcon, PrinterIcon, StopCircleIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 // import {
@@ -17,6 +17,7 @@ import {
   useContextMenu
 } from "react-contexify";
 import {DndContext,useDroppable,useDraggable} from '@dnd-kit/core';
+import { toPng } from 'html-to-image';
 
 import "react-contexify/dist/ReactContexify.css";
 import { PaperClipIcon } from '@heroicons/react/24/outline';
@@ -55,7 +56,7 @@ export default function Home() {
   const {setNodeRef} = useDroppable({
     id: 'unique-id-container',
   });
-
+  const [popup,setPopup] = useState(false);
 
   const [items,setItems] = useState<{ id: number; img: string; tags: string[]; }[]>([]);
   const pictures = [
@@ -78,6 +79,7 @@ export default function Home() {
     {id:17,img:'comprar1',tags:['comer','cenar','desayunar','merendar']},
     {id:18,img:'comprar2',tags:['comer','cenar','desayunar','merendar']},
   ]
+  const elementRef = useRef(null);
 
   const f = () => {
     let items2: { id: number; img: string; tags: string[]; }[] = [];
@@ -91,6 +93,8 @@ export default function Home() {
       }
     }
     setItems(items2);
+    setPopup(true);
+
   }
   const {
     transcript,
@@ -109,8 +113,20 @@ export default function Home() {
     setItems([]);
   }
   const close = ()=> {
-    setItems([]);
+    setPopup(false);
   }
+  const htmlToImageConvert = () => {
+    toPng(elementRef?.current, { cacheBust: false })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "mipictokids.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div>
       <header className="absolute inset-x-0 top-0 z-50">
@@ -129,30 +145,41 @@ export default function Home() {
       </header>
       <div  style={{margin:'0 auto', width:1000 }}>
 
-      <div className='textarea-container'>
-      <p>Escuchando: {listening ? 'on' : 'off'}</p>
-      <textarea 
-      value={transcript} // ...force the input's value to match the state variable...
-    />
-      </div>
+      {popup ? <div/> : (
+        <div>
 
-    <div className="button-container" >
-    <PlayCircleIcon onClick={startListening} className='action-button'/>
-      <StopCircleIcon onClick={SpeechRecognition.stopListening}  className='action-button' />
-      <MagnifyingGlassCircleIcon  onClick={f}  className='action-button' />
-      <TrashIcon  className='action-button' onClick={clear}/>
-    </div>
-    <br/>
+<div className='textarea-container'>
+<p>Escuchando: {listening ? 'on' : 'off'}</p>
+<textarea 
+value={transcript} // ...force the input's value to match the state variable...
+/>
+</div>
+
+<div className="button-container" >
+<PlayCircleIcon onClick={startListening} className='action-button'/>
+<StopCircleIcon onClick={SpeechRecognition.stopListening}  className='action-button' />
+<MagnifyingGlassCircleIcon  onClick={f}  className='action-button' />
+<TrashIcon  className='action-button' onClick={clear}/>
+</div>
+<br/>
+</div>
+      )}
+
+
     <div style={{display:'flex'}}>
     {/* <GridContextProvider onChange={onChange}> */}
     <DndContext>
      <SortableContext items={items}>
-    {items.length == 0 ? <div/> : (
+    {!popup ? <div/> : (
 <div className='main-picto-container'>
   
-  <div className="grid-item"><XMarkIcon className='action-button' onClick={close}/></div>
+  <div className="popup-toolbar">
+    <XMarkIcon className='action-button' onClick={close}/>
+    <PrinterIcon onClick={htmlToImageConvert} className='action-button'/>
 
-    <div className="picto-container" ref={setNodeRef}>
+    </div>
+
+    <div className="picto-container" ref={elementRef}>
     {items.map((item, i) => {     
           return (<GridItem item={item} i={i} f={()=>{
             const itemsClone = Array.from(items);
