@@ -16,13 +16,46 @@ import {
   Submenu,
   useContextMenu
 } from "react-contexify";
+import {DndContext,useDroppable,useDraggable} from '@dnd-kit/core';
 
 import "react-contexify/dist/ReactContexify.css";
 import { PaperClipIcon } from '@heroicons/react/24/outline';
+import { SortableContext } from '@dnd-kit/sortable';
 const MENU_ID = "menu-id";
 //TODO: https://codesandbox.io/p/sandbox/react-grid-dnd-example-ph8cqs?file=%2Fsrc%2Findex.js%3A66%2C22-66%2C51
+function GridItem({item,i,f}:{item:{id: number; img: string; tags: string[]},i:Number,f:any}){
+  const {attributes, listeners,setNodeRef} = useDraggable({
+    id: 'unique-id-'+ i.toString(),
+  });
+  const src = 'img/' + item.img + '.png';
+  return (
+   <div {...attributes}>
+  <div className="grid-item">
+   <div  className="grid-item-content" style={{
+     display:'flex',
+     flexDirection:'column',
+   
+   }}> 
+   <div style={{
+                display:'flex',
+                flexDirection:'row',
+       justifyContent:"space-between",
+       padding:5,
+       width:'100%'
+   }}>
+     <div>{i.toString()}</div>
+   <div onClick={f}>x</div>
+     </div>
+     <div>
+   <img src={src} style={{
+   width:200
+  }}></img></div></div></div></div>) 
+}
 export default function Home() {
-  const swapy = useRef(null)
+  const {setNodeRef} = useDroppable({
+    id: 'unique-id-container',
+  });
+
 
   const [items,setItems] = useState<{ id: number; img: string; tags: string[]; }[]>([]);
   const pictures = [
@@ -83,7 +116,7 @@ export default function Home() {
               <span className="sr-only">Your Company</span>
               <img
                 alt=""
-                src="logo.png"
+                src="logo2.png"
                 style={{width:200}}
               />
             </a>
@@ -94,68 +127,37 @@ export default function Home() {
       <div  style={{margin:'0 auto', width:1000 }}>
 
       <p>Microphone: {listening ? 'on' : 'off'}</p>
-      
-      <textarea rows={10} cols={100}
+      <div className='textarea-container'>
+      <textarea 
       value={transcript} // ...force the input's value to match the state variable...
     />
-    <div style={{display:'flex', margin:'0 auto',width:250}}>
-    <PlayCircleIcon onClick={startListening} style={{
-        width:100
-      }}/>
-      <StopCircleIcon onClick={SpeechRecognition.stopListening} style={{
-        width:100
-      }}/>
-      <MagnifyingGlassCircleIcon  onClick={f} style={{
-        width:100
-      }}  />
-      <TrashIcon style={{
-        width:100
-      }} onClick={clear}/>
+      </div>
+
+    <div className="button-container" >
+    <PlayCircleIcon onClick={startListening} className='action-button'/>
+      <StopCircleIcon onClick={SpeechRecognition.stopListening}  className='action-button' />
+      <MagnifyingGlassCircleIcon  onClick={f}  className='action-button' />
+      <TrashIcon  className='action-button' onClick={clear}/>
     </div>
     <br/>
     <div style={{display:'flex'}}>
     {/* <GridContextProvider onChange={onChange}> */}
-    <div className="container">
-    {/* <GridDropZone
-          className="dropzone left"
-          id="left"
-          boxesPerRow={3}
-          rowHeight={150}
-        > */}
+    <DndContext>
+    <SortableContext items={items}>
+    <div className="container" ref={setNodeRef}>
+    
     {items.map((item, i) => {     
-           // Return the element. Also pass key   
-          const src = 'img/' + item.img + '.png';
-           return (
-            <div key={i}>
-           <div className="grid-item">
-            <div  className="grid-item-content" style={{
-              display:'flex',
-              flexDirection:'column',
+          return (<GridItem item={item} i={i} f={()=>{
+            const itemsClone = Array.from(items);
+            itemsClone.splice(i,1);
+            setItems(itemsClone)
             
-            }}> 
-            <div style={{
-                         display:'flex',
-                         flexDirection:'row',
-                justifyContent:"space-between",
-                padding:5,
-                width:'100%'
-            }}>
-              <div>{i}</div>
-            <div onClick={()=>{
-              const itemsClone = Array.from(items);
-              itemsClone.splice(i,1);
-              setItems(itemsClone)
-              
-            }}>x</div>
-              </div>
-              <div>
-            <img src={src} style={{
-            width:200
-           }}></img></div></div></div></div>) 
+          }}/>) 
         })}
-          {/* </GridDropZone> */}
       </div>
-      {/* </GridContextProvider> */}
+      </SortableContext>
+    </DndContext>
+
 
     </div>
 

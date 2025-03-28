@@ -24,13 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-textarea {
-  border-style: solid;
-    border-width: 1px;
-    margin: 0 auto;
-    width: 90%;
-    margin-left: 50px;
-}
+
 .container {
   display: flex;
   touch-action: none;
@@ -68,4 +62,33 @@ textarea {
   font-family: Arial, Helvetica, sans-serif;
   align-items: center;
   border-radius: 0.5em;
+}
+@media only screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+  textarea {
+    border-style: solid;
+    border-width: 1px;
+    margin: 0 auto;
+    width: 90vw;
+    height: 250px;
+  }
+  .textarea-container {
+    margin-top: 100px;
+    padding: 2%;
+  
+  }
+  .button-container {
+    display: flex
+  }
+  .action-button{
+    width: 70px;
+    margin-left: 25px;
+  }
+}
+@media only screen and (min-width: 600px) {
+  body {
+    background-color: green;
+  }
 }
