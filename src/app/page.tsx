@@ -116,7 +116,10 @@ export default function Home() {
     setPopup(false);
   }
   const htmlToImageConvert = () => {
-    toPng(elementRef?.current, { cacheBust: false })
+    if (elementRef){
+      if(elementRef.current){
+
+      toPng(elementRef.current, { cacheBust: false })
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.download = "mipictokids.png";
@@ -126,6 +129,9 @@ export default function Home() {
       .catch((err) => {
         console.log(err);
       });
+    }
+  }
+
   };
   return (
     <div>
