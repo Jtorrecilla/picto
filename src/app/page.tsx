@@ -1,7 +1,9 @@
 'use client'
 import { MagnifyingGlassCircleIcon, PlayCircleIcon, PrinterIcon, StopCircleIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import SortableList, { SortableItem } from 'react-easy-sort'
+
 // import {
 //   GridContextProvider,
 //   GridDropZone,
@@ -22,9 +24,13 @@ import { toPng } from 'html-to-image';
 import "react-contexify/dist/ReactContexify.css";
 import { PaperClipIcon } from '@heroicons/react/24/outline';
 import { SortableContext } from '@dnd-kit/sortable';
+import { itemsEqual } from '@dnd-kit/sortable/dist/utilities';
+import React from 'react';
+import { arrayMoveImmutable } from 'array-move';
+import { pictures } from '../../models/picture.model';
 const MENU_ID = "menu-id";
 //TODO: https://codesandbox.io/p/sandbox/react-grid-dnd-example-ph8cqs?file=%2Fsrc%2Findex.js%3A66%2C22-66%2C51
-function GridItem({item,i,f}:{item:{id: number; img: string; tags: string[]},i:Number,f:any}){
+function GridItem({item,i,f,showButtons = true,click = null}:{item:{id: number; img: string; tags: string[]},i:Number,f:any,showButtons:boolean,click:any}){
   const {attributes, listeners,setNodeRef} = useDraggable({
     id: 'unique-id-'+ i.toString(),
   });
@@ -38,78 +44,82 @@ function GridItem({item,i,f}:{item:{id: number; img: string; tags: string[]},i:N
    
    }}> 
    <div style={{
+       padding:5,
+       width:'100%'
+   }}>
+    {showButtons==true ? (<div style={{
                 display:'flex',
                 flexDirection:'row',
        justifyContent:"space-between",
        padding:5,
        width:'100%'
-   }}>
-     <div>{i.toString()}</div>
-   <div onClick={f}>x</div>
+   }}><div>{i.toString()}</div>
+    <div onClick={f}>x</div></div>) : (<div/>)}
+     
      </div>
      <div>
-   <img src={src} style={{
+   <img onClick={click} src={src} style={{
    width:200
   }}></img></div></div></div></div>) 
 }
+const All = React.memo((props: any) => { 
+
+  return (<div>
+    {pictures?.map((item:any, i:number) => {     
+        return (<GridItem key={'p' + i.toString()} showButtons={false} item={item} i={i} click={()=>{
+          props.click(item);
+
+        }} f={null}/>) 
+      })}
+</div>)
+});
+
+// function All({items,click}:{items:any,click:any}){
+//   const total = useMemo(() => items, [items]);
+
+//   return (<div>
+//       {total.map((item:any, i:number) => {     
+//           return (<GridItem key={new Date().getMilliseconds()} showButtons={false} item={item} i={i} click={()=>{
+//             click(item);
+
+//           }} f={()=>{ 
+//           }}/>) 
+//         })}
+//   </div>)
+// }
 export default function Home() {
+  const [selected,setSelected] = useState(0);
+  const [page1,setPage1] = useState(true);
+  const [page2,setPage2] = useState(false);
+  const onSortEnd = (oldIndex: number, newIndex: number) => {
+    setItems2((array) => arrayMoveImmutable(array, oldIndex, newIndex))
+  }
   const {setNodeRef} = useDroppable({
     id: 'unique-id-container',
   });
   const [popup,setPopup] = useState(false);
+  const [other,setOther] = useState(false);
+  const [lang,setLang]=useState('es-ES');
 
   const [items,setItems] = useState<{ id: number; img: string; tags: string[]; }[]>([]);
-  const pictures = [
-    // {id:1,img:'',tags:['mujer','madre','mama']},
-    // {id:2,img:'',tags:['padre','papa','hombre']},
-    {id:3,img:'niño',tags:['niño','peque','nen','petit','petitó']},
-    {id:4,img:'niña1',tags:['niña','peque','nena','petit','petitona']},
-    {id:5,img:'niña2',tags:['niña','peque','nena','petit','petitona']},
-    {id:6,img:'niña3',tags:['niña','peque','nena','petit','petitona']},
-    {id:7,img:'parque1',tags:['parque','columpios','parc','gronxadors']},
-    {id:8,img:'parque2',tags:['parque','columpios','parc','gronxadors']},
-    {id:9,img:'dormir1',tags:['dormir','sueño','cama','son','llit']},
-    {id:10,img:'dormir2',tags:['dormir','sueño','cama','son','llit']},
-    {id:11,img:'hospital',tags:['hospital'] },
-    {id:12,img:'hospita2',tags:['hospital'] },
-    {id:13,img:'medico',tags:['médico','medico','doctor','metge','metge']},
-    {id:14,img:'comer1',tags:['comer','cenar','desayunar','merendar','dinar','sopar','esmorzar','berenar']},
-    {id:15,img:'comer2',tags:['comer','cenar','desayunar','merendar','dinar','sopar','esmorzar','berenar']},
-    {id:16,img:'comer3',tags:['comer','cenar','desayunar','merendar','dinar','sopar','esmorzar','berenar']},
-    {id:17,img:'comprar1',tags:['comprar','compras','compres','merendar']},
-    {id:18,img:'comprar2',tags:['comprar','compras','desayunar','merendar']},
-    {id:19,img:'jugar1',tags:['jugar','joc','diversió','esport','lleure']},
-    {id:20,img:'jugar2',tags:['jugar','joc','diversió','esport','lleure']},
-    {id:21,img:'jugar3',tags:['jugar','joc','diversió','esport','lleure']},
-    {id:22,img:'jugar4',tags:['jugar','joc','diversió','esport','lleure']},
-    {id:23,img:'jugar5',tags:['jugar','joc','diversió','esport','lleure']},
-    {id:24,img:'jugar6',tags:['jugar','joc','diversió','esport','lleure']},
-    {id:25,img:'estudiar1',tags:['estudiar','aprender','libro','colegio','estudi','aprenentatge','llibre','escola']},
-    {id:26,img:'estudiar2',tags:['estudiar','aprender','libro','colegio','estudi','aprenentatge','llibre','escola']},
-    {id:27,img:'correr1',tags:['correr','ejercicio','salud','esport','exercici','córrer','salut']},
-    {id:28,img:'correr2',tags:['correr','ejercicio','salud','esport','exercici','córrer','salut']},
-    {id:29,img:'correr3',tags:['correr','ejercicio','salud','esport','exercici','córrer','salut']},
-    {id:30,img:'correr4',tags:['correr','ejercicio','salud','esport','exercici','córrer','salut']},
-    {id:31,img:'dibujar1',tags:['dibujar','arte','creatividad','art','creativitat','llapis','paper']},
-    {id:32,img:'cocinar1',tags:['cocinar','comer','receta','fuego','cuina','menjar','recepta','foc']},
-    {id:33,img:'cocinar2',tags:['cocinar','comer','receta','fuego','cuina','menjar','recepta','foc']}
-
-    
-  ]
+  const [items2,setItems2] = useState<{ id: number; img: string; tags: string[]; }[]>([]);
+  
   const elementRef = useRef(null);
+  const elementRef2 = useRef(null);
 
   const f = () => {
-    let items2: { id: number; img: string; tags: string[]; }[] = [];
+    let items3: { id: number; img: string; tags: string[]; }[] = [];
     const words = transcript.split(' ');
+    console.log(words);
     const imageAre = [];
     for(let c = 0;c < words.length; c++){
       const word = words[c];
       var found = pictures.find(a=> a.tags.includes(word));
       if (found){
-        items2 = items2.concat(new Array(found))
+        items3.push(found);pictures.find(a=> a.tags.includes(word.toLocaleLowerCase()))
       }
     }
-    setItems(items2);
+    setItems(items3);
     setPopup(true);
 
   }
@@ -122,7 +132,7 @@ export default function Home() {
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
-  const startListening = () => SpeechRecognition.startListening({ continuous: true });
+  const startListening = () => SpeechRecognition.startListening({ continuous: true, language: lang });
 
 
   const clear = ()=> {
@@ -131,6 +141,14 @@ export default function Home() {
   }
   const close = ()=> {
     setPopup(false);
+  }
+  const setItemClick = (item:any)=>{
+    let ary = [...items2];
+    console.log(ary);
+ary.push( { id: (ary.length + 1) , img:item.img,tags:[]});
+                  setItems2(ary);
+
+    console.log(ary);
   }
   const htmlToImageConvert = () => {
     if (elementRef){
@@ -148,6 +166,26 @@ export default function Home() {
       });
     }
   }
+  
+
+  };
+  const htmlToImageConvert2 = () => {
+    if (elementRef2){
+      if(elementRef2.current){
+
+      toPng(elementRef2.current, { cacheBust: false })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "mipictokids.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+  
 
   };
   return (
@@ -159,18 +197,41 @@ export default function Home() {
               <img
                 alt=""
                 src="logo2.png"
-                style={{width:200}}
+                style={{width:150 }}
               />
             </a>
           </div>
+          <div>
+          <div className='global'>
+          <ul>
+        <li className={page1 ? 'selected' :''}><button onClick={()=>{setPage1(true);setPage2(false);}}>Modo Voz</button></li>
+
+<li className={page2 ? 'selected' :''}>
+<button onClick={()=>{setPage1(false);setPage2(true);}}>Modo selección</button>
+</li>
+      </ul>
+      <br/>
+      </div><div className='flags'>
+      <ul>
+        <li className={selected==0 ? 'selected' : ''}><button onClick={()=>{setLang('es-ES');setSelected(0)}}><img src="img/es.png"/></button></li>
+
+<li className={selected==1 ? 'selected' : ''}>
+<button onClick={()=>{setLang('ca-ES');setSelected(1);}}><img src="img/ca.png"/></button>
+</li>
+{/* <li className={selected==2 ? 'selected' : ''}>
+<button onClick={()=>{setLang('en-US');setSelected(2)}}><img src="img/uk.png"/></button>
+</li> */}
+      </ul>
+      </div>
+      </div>
         </nav>
 
       </header>
-      <div  style={{margin:'0 auto', width:1000 }}>
-
+      <div  style={{margin:'0 auto',marginTop:180, width:'100%' }}>
+      
       {popup ? <div/> : (
         <div>
-
+          {page2 ? (<div/>) : (          <div>
 <div className='textarea-container'>
 <p>Escuchando: {listening ? 'on' : 'off'}</p>
 <textarea 
@@ -184,15 +245,53 @@ value={transcript} // ...force the input's value to match the state variable...
 <MagnifyingGlassCircleIcon  onClick={f}  className='action-button' />
 <TrashIcon  className='action-button' onClick={clear}/>
 </div>
+</div>)}
+
 <br/>
+{page2 ? (<div style={{width:'100vw', height:'100vh', backgroundColor:'#f0f0f0'}}>
+  <div className='total-image-container' style={{
+        display: 'flex',
+            flexDirection: 'row',
+            overflowX: 'auto',            height: 183
+  }}>
+  <All items={pictures} click={setItemClick}/>
+       
+  </div>
+  <div style={{display:'block',paddingRight:50,marginTop:20,color:'black'}}>
+  <div className="popup-toolbar">
+    <XMarkIcon className='action-button' onClick={()=>setItems2([])}/>
+    <PrinterIcon onClick={htmlToImageConvert2} className='action-button'/>
+
+    </div>
+    <div ref={elementRef2}>
+  <SortableList onSortEnd={onSortEnd} className="list" draggedItemClassName="dragged">
+
+    {items2.map((item, i) => {     
+          return (
+            <SortableItem key={item.id} >
+              <div className='item'>
+              <GridItem  key={i
+          } showButtons={true} click={null} item={item} i={i} f={()=>{
+            const itemsClone = Array.from(items2);
+            itemsClone.splice(i,1);
+            setItems2(itemsClone)
+            
+          }}/>
+              </div>
+          {/*  */}
+          </SortableItem>) 
+        })}
+        </SortableList>
+      </div>
+      </div>
+</div>) :(<div/>)}
+
 </div>
       )}
 
 
     <div style={{display:'flex'}}>
-    {/* <GridContextProvider onChange={onChange}> */}
-    <DndContext>
-     <SortableContext items={items}>
+
     {!popup ? <div/> : (
 <div className='main-picto-container'>
   
@@ -214,8 +313,7 @@ value={transcript} // ...force the input's value to match the state variable...
       </div>
       </div>
     )}
-      </SortableContext> 
-    </DndContext>
+
 
 
     </div>

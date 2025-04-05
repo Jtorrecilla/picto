@@ -63,6 +63,13 @@ body {
   body {
     background-color: lightblue;
   }
+  div.mobile{
+    display: block;
+  }
+  div.global{
+display: none;
+  }
+
   textarea {
     border-style: solid;
     border-width: 1px;
@@ -105,7 +112,102 @@ body {
   }
 }
 @media only screen and (min-width: 600px) {
-  body {
-    background-color: green;
+
+  .popup-toolbar {
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
   }
+  .picto-container{
+    display: grid
+    ;
+        grid: auto auto;
+        grid-template-columns: auto auto auto auto;
+        user-select: none;
+  }
+  .main-picto-container{
+    position: absolute;
+    width: 100vw;
+    z-index: 1000;
+    background-color: lightblue;
+    top:0;
+    
+  }
+  body {
+    background-color: lightblue;
+  }
+  div.mobile{
+    display: none;
+  }
+  div.global{
+display: block;
+  }
+  div.global > ul:first-child {
+    display: inline-flex
+    ;
+        justify-content: space-between;
+        width: 300px;
+  }
+
+  textarea {
+    margin-left: 5% !important;
+    border-style: solid;
+    border-width: 1px;
+    width: 85%;
+    height: 250px;
+  }
+  .button-container {
+    display: flex;
+    justify-content: space-around;
+  }
+  .action-button{
+    width: 70px;
+    margin-left: 25px;
+  }
+  .total-image-container > div {
+    display: flex
+    ;
+        flex-direction: row;
+        overflow-x: auto;
+        height: 183px;
+  }
+  .total-image-container > div > div.grid-item > div > div.grid-item-content > div > img {
+    max-width: 110px!important;
+  }
+  .list {
+    user-select: none;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;
+    width: 100vw;
+  }
+  .item {
+
+justify-content: center;
+align-items: center;
+background-color: #fff;
+color: #fff;
+height: 270px;
+cursor: grab;
+font-size: 20px;
+user-select: none;
+  }
+}
+div:not(.global) > ul {
+  display: inline-flex
+  ;
+      justify-content: space-between;
+      width: 100px;
+}
+.flags{
+  display: flex
+;
+  flex-direction: row-reverse;
+}
+ul > li > button {
+  /* border-radius: 50%; */
+  margin: 10px;
+}
+li.selected {
+  background-color: blue;
 }

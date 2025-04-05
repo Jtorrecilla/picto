@@ -27,12 +27,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-<div className="overflow-hidden py-24 sm:py-32">
 <div>
     <div>
-      <div className="lg:pt-4 lg:pr-8">
+      <div >
         {children}
-        </div>
         </div>
         </div>
         </div>
