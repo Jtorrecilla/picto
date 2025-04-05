@@ -303,7 +303,7 @@ value={transcript} // ...force the input's value to match the state variable...
 
     <div className="picto-container" ref={elementRef}>
     {items.map((item, i) => {     
-          return (<GridItem item={item} i={i} f={()=>{
+          return (<GridItem click={null} showButtons={true} item={item} i={i} f={()=>{
             const itemsClone = Array.from(items);
             itemsClone.splice(i,1);
             setItems(itemsClone)
