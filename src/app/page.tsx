@@ -1,5 +1,5 @@
 'use client'
-import { MagnifyingGlassCircleIcon, PlayCircleIcon, PrinterIcon, StopCircleIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowsPointingInIcon, ArrowsPointingOutIcon, MagnifyingGlassCircleIcon, PlayCircleIcon, PrinterIcon, StopCircleIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import SortableList, { SortableItem } from 'react-easy-sort'
@@ -98,6 +98,7 @@ export default function Home() {
     id: 'unique-id-container',
   });
   const [popup,setPopup] = useState(false);
+  const [hide,setHide] = useState(false);
   const [other,setOther] = useState(false);
   const [lang,setLang]=useState('es-ES');
 
@@ -190,7 +191,25 @@ ary.push( { id: (ary.length + 1) , img:item.img,tags:[]});
   };
   return (
     <div>
-      <header className="absolute inset-x-0 top-0 z-50">
+      <div  style={!hide ? {display:'none'} : {display:'block'}}>
+<div className='main-picto-container'>
+<div className="popup-toolbar">
+<XMarkIcon className='action-button' onClick={()=>setHide(false)}/>
+<PrinterIcon onClick={htmlToImageConvert} className='action-button'/>
+</div>
+<div className='total-picto'>
+{items2.map((item, i) => {     
+          return (<GridItem click={null} showButtons={false} item={item} i={i} f={()=>{
+            const itemsClone = Array.from(items);
+            itemsClone.splice(i,1);
+            setItems(itemsClone)
+            
+          }}/>) 
+        })}
+</div>
+</div>
+      </div>
+      <header className="absolute inset-x-0 top-0 z-50" style={hide ? {display:'none'} : {display:'block'}}>
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="logo-container">
             <a href="#" className="-m-1.5 p-1.5">
@@ -230,7 +249,7 @@ ary.push( { id: (ary.length + 1) , img:item.img,tags:[]});
       <div  style={{margin:'0 auto',marginTop:180, width:'100%' }}>
       
       {popup ? <div/> : (
-        <div>
+        <div style={hide ? {display:'none'} : {display:'block'}}>
           {page2 ? (<div/>) : (          <div>
 <div className='textarea-container'>
 <p>Escuchando: {listening ? 'on' : 'off'}</p>
@@ -261,7 +280,7 @@ value={transcript} // ...force the input's value to match the state variable...
   <div className="popup-toolbar">
     <XMarkIcon className='action-button' onClick={()=>setItems2([])}/>
     <PrinterIcon onClick={htmlToImageConvert2} className='action-button'/>
-
+    <ArrowsPointingOutIcon onClick={()=>setHide(true)} className='action-button'/>
     </div>
     <div ref={elementRef2}>
   <SortableList onSortEnd={onSortEnd} className="list" draggedItemClassName="dragged">
@@ -293,7 +312,7 @@ value={transcript} // ...force the input's value to match the state variable...
     <div style={{display:'flex'}}>
 
     {!popup ? <div/> : (
-<div className='main-picto-container'>
+<div className='main-picto-container' style={hide ? {display:'none'} : {display:'block'}}>
   
   <div className="popup-toolbar">
     <XMarkIcon className='action-button' onClick={close}/>

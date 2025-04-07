@@ -113,6 +113,13 @@ display: none;
 }
 @media only screen and (min-width: 600px) {
 
+  .total-picto {
+    display: grid;
+            grid-template-columns: auto auto auto;
+            margin-left: 200px;
+            margin-right: 200px;
+            grid-gap: 10px;
+  }
   .popup-toolbar {
     display: flex;
     justify-content: space-between;
